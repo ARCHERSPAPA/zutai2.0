@@ -1,0 +1,36 @@
+{
+  "name": "zutai-project",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@topology/activity-diagram": "^1.0.1",
+    "@topology/chart-diagram": "^1.0.9",
+    "@topology/class-diagram": "^1.0.1",
+    "@topology/core": "^1.1.8",
+    "@topology/flow-diagram": "^1.0.2",
+    "@topology/sequence-diagram": "^1.0.1",
+    "@topology/svg": "^1.0.1",
+    "element-plus": "^2.2.0",
+    "mitt": "^3.0.0",
+    "monaco-editor": "^0.27.0",
+    "monaco-editor-webpack-plugin": "^7.0.1",
+    "vue": "^3.2.25",
+    "vue-color": "^2.8.1",
+    "vue-color-picker": "^0.6.1",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.2",
+    "prettier": "^1.16.4",
+    "sass": "^1.26.10",
+    "sass-loader": "^8.0.0",
+    "typescript": "^4.5.4",
+    "vite": "^2.9.7",
+    "vue-tsc": "^0.34.7"
+  }
+}
