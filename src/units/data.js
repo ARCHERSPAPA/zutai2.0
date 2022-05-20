@@ -215,5 +215,88 @@ export const icons = [
         image: 'public/DC/ZT.PNG'
       },
     },]
+  },
+  {
+    name: '表格表单', child: [{
+      key: 'biaoge',
+      title: '表格',
+      data: {
+        name: 'table',
+        width: 100,
+        height: 100,
+        table: {
+          colWidth: 150,
+          rowHeight: 40,
+          header: {
+            height: 50,
+            fontWeight: 'bold',
+            // show: false,
+            data: [
+              {
+                width: 100,
+                text: '设备 ID'
+              },
+              {
+                text: '设备名称'
+              },
+
+            ]
+          },
+          data: [1, 2]
+        }
+      },
+    },
+    ]
+  },
+  {
+    name: 'Echart图表', child: [
+      {
+      key: 'line-chart-line',
+      title: 'line-chart-line',
+      data: {
+        name: "lineChart",
+        x: 100,
+        y: 100,
+        width: 400,
+        height: 200,
+        chartsColor: [
+          '#1890ff',
+          '#2FC25B',
+          '#FACC14',
+          '#c23531',
+          '#2f4554',
+          '#61a0a8',
+          '#d48265'
+        ],
+        xAxisData: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        smooth: false,
+        data: [
+          [1820, 1932, 1901, 1934, 1990, 1830, 1920],
+          [1710, 1932, 1901, 1834, 1700, 1830, 1720],
+        ]
+      },
+    },
+    {
+      key: 'gauge',
+      title: 'gauge',
+      data: {
+        name: 'gauge',
+        x: 100,
+        y: 100,
+        width: 400,
+        height: 400,
+        disableAnchor: true,
+        value: 90,
+        unit: 'm/s',
+        axisLine: [
+          [0.3, '#67e0e3'],
+          [0.7, '#37a2da'],
+          [1, '#fd666d']
+        ],
+        animateCycle: 1,
+        keepAnimateState: 0
+      }
+    },
+    ]
   }
 ];

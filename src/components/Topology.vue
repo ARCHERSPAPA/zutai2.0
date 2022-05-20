@@ -11,7 +11,7 @@
       width="30%"
       draggable
     >
-      <span>{{currentMap.active[0]?.data?.remark}}</span>
+      <span>{{ currentMap.active[0]?.data?.remark }}</span>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取消</el-button>
@@ -34,45 +34,42 @@ let vue = getCurrentInstance();
 const Emit = vue.appContext.app.config.globalProperties.$mitt;
 let contextmenu = reactive({ left: 2 });
 let dialogVisible = ref(false);
-const onContextMenu = (event,v) => {
-  console.log(event,v)
+const onContextMenu = (event, v) => {
+  console.log(event, v);
   contextmenu.left = event.e.x + "px";
   contextmenu.top = event.e.y + "px";
 };
-let currentMap=ref('')
+let currentMap = ref("");
 onMounted(() => {
+  const option = {
+    disableScale: true,
+    rule: true,
+    // grid:true,
+    autoAnchor: false, //自动瞄点连线
+  };
+  const topology = new Topology("topology", option);
+  currentMap.value = window.topology.store;
+  registerEcharts();
+  topology.on("contextmenu", onContextMenu);
+  topology.fitView();
+  topology.on("closeMenu", () => {
+    close();
+  });
+  topology.on("showdiag", ({ pen }) => {
+    dialogVisible.value = true;
+    console.log(currentMap);
+  });
+  topology.on("test", ({ pen }) => {
+    alert("自定义事件执行成功", pen.name);
+  });
 
-    const option = {
-      disableScale: true,
-      rule: true,
-      // grid:true,
-      autoAnchor: false, //自动瞄点连线
-    };
-    const topology = new Topology("topology", option);
-    currentMap.value=window.topology.store
-    registerEcharts();
-    topology.on("contextmenu", onContextMenu);
+  // 点击画布
 
-    topology.on("closeMenu", () => {
-      close();
-    });
-    topology.on("showdiag", ({ pen }) => {
-      dialogVisible.value = true;
-            console.log(currentMap);
-    });
-    topology.on("test", ({ pen }) => {
-     alert('自定义事件执行成功',pen.name)
-    });
-
-    // 点击画布
-  
-    topology.on("click", (datas) => {
-
-      topology.store.emitter.emit("clickPen", datas.pen);
-      visible.value = true;
-      close();
-    });
-
+  topology.on("click", (datas) => {
+    topology.store.emitter.emit("clickPen", datas.pen);
+    visible.value = true;
+    close();
+  });
 });
 
 const close = () => {
@@ -87,7 +84,7 @@ const visible = ref(false);
 
 <style scoped lang="scss">
 .main {
-   height: calc(100vh - 61px);
+  height: calc(100vh - 61px);
   flex-grow: 1;
   #topology {
     display: inline-block;

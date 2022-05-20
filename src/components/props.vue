@@ -1,7 +1,11 @@
 <!-- 属性栏 -->
 <template>
   <div class="props">
-    <el-tabs @tab-click="handleClick" v-if="data.draType != 0">
+    <el-tabs
+      @tab-click="handleClick"
+      v-if="data.draType != 0"
+      style="height: 100%"
+    >
       <el-tab-pane label="外观">
         <div v-if="data.draType === 1">
           <p class="title">位置与大小</p>
@@ -66,6 +70,11 @@
           </div>
           <div class="item">
             <span class="label"> 颜色：</span>
+            <color
+              :color="data.color"
+              :attr="'color'"
+              class="colorPicker"
+            ></color>
             <el-input
               v-model="data.color"
               placeholder="请输入文字颜色"
@@ -109,6 +118,12 @@
           </div>
           <div class="item">
             <span class="label"> 线条颜色：</span>
+            <color
+              :color="data.color"
+              :attr="'color'"
+              class="colorPicker"
+              style="left: 165px"
+            ></color>
             <el-input
               v-model="data.color"
               placeholder="Please input"
@@ -131,7 +146,7 @@
       </el-tab-pane>
       <el-tab-pane label="事件">
         <p class="title">事件属性</p>
-        <p style="text-align:center;padding:8px">
+        <p style="text-align: center; padding: 8px">
           <el-button @click="addEvent()" v-if="!data.events"
             >添加事件</el-button
           >
@@ -202,6 +217,12 @@
           <p class="title">动画属性</p>
           <div class="item">
             <span class="label"> 颜色：</span>
+            <color
+              :color="data.animateColor"
+              :attr="'animateColor'"
+              class="colorPicker"
+              style="left: 165px"
+            ></color>
             <el-input
               v-model="data.animateColor"
               placeholder="Please input"
@@ -251,6 +272,28 @@
             @change="changeId('id')"
           />
         </div>
+        <p class="title">tags</p>
+        <div class="tags" v-if="data.tags.length > 0">
+          tags：
+          <span
+            class="tag"
+            v-for="(tag, index) of data.tags"
+            :key="index"
+            @click="removeTag(index)"
+            >{{ tag }} x</span
+          >
+        </div>
+        <div class="item">
+          <span class="label">new tag：</span>
+
+          <el-input
+            v-model="data.newTag"
+            placeholder="按Enter添加新tag"
+            size="small"
+            style="width: 100px"
+            @keydown.enter="addTag()"
+          />
+        </div>
         <p class="title">工程数据</p>
         <div class="item">
           <span class="label"> 状态：</span>
@@ -268,16 +311,58 @@
             />
           </el-select>
         </div>
+        <p class="title">自定义数据</p>
       </el-tab-pane>
     </el-tabs>
 
-    <el-tabs @tab-click="handleClick" v-else>
-      <el-tab-pane label="图纸"> </el-tab-pane>
+    <el-tabs @tab-click="handleClick" v-else style="height: 100%">
+      <el-tab-pane label="图纸">
+        <div class="item">
+          <span class="label">背景图:</span>
+          <el-input
+            v-model="data.config.background"
+            placeholder="Please input"
+            size="small"
+            style="width: 100px"
+            @change="changebackground()"
+          />
+        </div>
+        <div class="item">
+          <span class="label">背景网格:</span>
+          <el-select
+            v-model="data.config.grid"
+            placeholder="是否开启网格"
+            style="width: 100px"
+            @change="changeMaps()"
+            size="small"
+          >
+            <el-option label="开启" :value="true" />
+            <el-option label="关闭" :value="false" />
+          </el-select>
+        </div>
+        <div class="item" v-if="data.config.grid">
+          <span class="label">网格颜色:</span>
+          <color
+            :color="data.config.gridColor"
+            :attr="'gridColor'"
+            :type="2"
+            class="colorPicker"
+            style="left: 165px"
+          ></color>
+          <el-input
+            v-model="data.config.gridColor"
+            placeholder="Please input"
+            size="small"
+            style="width: 100px"
+            @change="changeMaps()"
+          />
+        </div>
+      </el-tab-pane>
       <el-tab-pane label="通信">
         <div class="item">
           <span class="label"> websock：</span>
           <el-input
-            v-model="data.WebSocketUrl"
+            v-model="data.config.websocket"
             placeholder="Please input"
             size="small"
             @blur="connectWeb()"
@@ -287,7 +372,7 @@
         <div class="item">
           <span class="label"> http(轮询)：</span>
           <el-input
-            v-model="data.httpUrl"
+            v-model="data.config.http"
             placeholder="Please input"
             size="small"
             @blur="connectHttp()"
@@ -297,7 +382,7 @@
         <div class="item">
           <span class="label"> mqtt:</span>
           <el-input
-            v-model="data.mqttUrl"
+            v-model="data.config.mqtt"
             placeholder="Please input"
             size="small"
             @blur="connectMqtt()"
@@ -307,9 +392,8 @@
       </el-tab-pane>
       <el-tab-pane label="布局"> </el-tab-pane>
     </el-tabs>
-       <color></color>
-    <JSedit v-if="data.showEdit"></JSedit>
 
+    <JSedit v-if="data.showEdit"></JSedit>
   </div>
 </template>
 
@@ -324,7 +408,7 @@ import {
   vModelCheckbox,
 } from "vue";
 import JSedit from "./JSedit.vue";
-import color from "./color.vue"
+import color from "./color.vue";
 let vue = getCurrentInstance();
 const renderOption = (name) => {
   return [
@@ -344,10 +428,9 @@ const renderOption = (name) => {
 };
 let data = reactive({
   pen: [],
-  WebSocketUrl: "",
-  httpUrl: "",
-  mqttUrl: "",
+  config: [],
   showEdit: false,
+  newTag: "",
   EventOptions: [
     {
       label: "单击",
@@ -397,12 +480,21 @@ onMounted(() => {
       data.showEdit = false;
     }
   });
+  Emits.on("changeColor", (v) => {
+    if (v.type == 1) {
+      //一般属性颜色修改
+      data[v.name] = v.color;
+      changeProp(v.name);
+    } else {
+      //网格颜色修改
+      data.config.gridColor = v.color;
+      changeMaps();
+    }
+  });
   Emits.on("openData", (v) => {
     console.log(window.topology.WebSocket);
     setTimeout(() => {
-      data.WebSocketUrl = window.topology.websocket.url;
-      data.httpUrl = window.topology.store.data.http;
-      data.mqttUrl = window.topology.store.data.mqtt;
+      data.config = window.topology.data();
       // data.http = window.topology.http.url;
     }, 1000);
   });
@@ -438,6 +530,7 @@ const renderPen = (pen) => {
   data.color = pen.color;
   data.lineHeight = pen.lineHeight;
   data.fontFamily = pen.fontFamily;
+  data.tags = pen.tags ? pen.tags : [];
 };
 const renderLine = (line) => {
   window.topology.addPen(line);
@@ -448,11 +541,25 @@ const renderLine = (line) => {
   data.animateColor = line.animateColor;
   data.animateSpan = line.animateSpan;
   data.autoPlay = line.autoPlay;
+  data.tags = line.tags ? line.tags : [];
   window.topology.inactive();
 };
 //链接websorck
 const connectWeb = () => {
   window.topology.connectWebsocket(data.WebSocketUrl);
+};
+const removeTag = (index) => {
+  data.tags.splice(index, 1);
+  window.topology.setValue({ id: data.id, tags: data.tags });
+  window.topology.render();
+};
+const addTag = () => {
+  // let param = { id: data.id, tags: data.tags ? data.tags : [] };
+  // param.tags.push(data.newTag);
+  data.tags.push(data.newTag);
+  window.topology.setValue({ id: data.id, tags: data.tags });
+  data.newTag = "";
+  window.topology.render();
 };
 //链接http
 const connectHttp = () => {
@@ -474,8 +581,6 @@ const connectMqtt = () => {
       customClientId: false,
     },
   };
-
-  // 方式1
   topology.connectMqtt(params);
 };
 //开启动画
@@ -496,6 +601,7 @@ const close = () => {
 
 const changeId = () => {
   window.topology.setValue({ id: data.currentId, newId: data.id });
+  window.topology.render();
 };
 //更新画布数据
 const changeProp = (propName) => {
@@ -503,6 +609,17 @@ const changeProp = (propName) => {
   updateValue[propName] = data[propName];
   window.topology.setValue(updateValue);
   window.topology.render();
+};
+const changeMaps = () => {
+  window.topology.setGrid({
+    grid: data.config.grid,
+    gridColor: data.config.gridColor,
+  });
+  window.topology.render(Infinity);
+};
+const changebackground = () => {
+  window.topology.setBackgroundImage(data.config.background);
+  window.topology.render(Infinity);
 };
 //添加事件
 const addEvent = () => {
@@ -536,6 +653,7 @@ const changeEvent = (eventName) => {
   height: calc(100vh - 61px);
   border-left: 1px solid #ccc;
   background-color: #fff;
+
   .title {
     padding: 8px;
     font-size: 16px;
@@ -544,13 +662,45 @@ const changeEvent = (eventName) => {
     border-bottom: 1px solid #ccc;
     border-top: 1px solid #ccc;
   }
+  .tags {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    .tag {
+      padding: 0 10px 4px 10px;
+      border: 1px solid #333;
+      cursor: pointer;
+      border-radius: 8px;
+      color: #999;
+      margin: 8px 8px 0 0;
+    }
+    .tag:hover{
+      background: #444;
+    }
+  }
   .item {
     display: flex;
     padding: 10px;
+    position: relative;
 
+    .label {
+    }
+    .colorPicker {
+      position: absolute;
+      left: 165px;
+      z-index: 55555;
+    }
     input {
       width: 100px;
     }
+    :deep(.el-input) {
+      flex-grow: 1;
+    }
   }
+}
+
+:deep(.el-tabs__content) {
+  height: 100%;
 }
 </style>
