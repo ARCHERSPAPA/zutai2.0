@@ -10,6 +10,7 @@ export const icons = [
         text: '矩形',
         width: 100,
         height: 100,
+        visible:true,
         title: '# 矩形',
         events: [
           {
@@ -26,6 +27,8 @@ export const icons = [
       data: {
         name: 'text',
         text: '文字',
+        color:'#333',
+        visible:true,
         width: 100,
         height: 100,
         title: '文字',
@@ -41,6 +44,7 @@ export const icons = [
         width: 100,
         height: 100,
         text: "Text",
+        visible:true,
         path: "M250 150 L150 350 L350 350 Z",
       },
     },
@@ -51,6 +55,7 @@ export const icons = [
         name: 'circle',
         text: '圆形',
         width: 100,
+        visible:true,
         height: 100,
         events: [
           {
@@ -66,6 +71,7 @@ export const icons = [
       title: '图片',
       data: {
         name: 'image',
+        visible:true,
         width: 100,
         height: 100,
         image:
@@ -79,7 +85,7 @@ export const icons = [
         name: 'video',
         width: 100,
         height: 100,
-
+        visible:true,
         video: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',
         autoPlay: true,
       },
@@ -90,6 +96,7 @@ export const icons = [
       data: {
         name: 'video',
         width: 100,
+        visible:true,
         height: 100,
         audio: 'https://down.ear0.com:3321/preview?soundid=37418&type=mp3',
         autoPlay: true,
@@ -131,6 +138,7 @@ export const icons = [
       data: {
         name: 'image',
         width: 100,
+        visible:true,
         height: 100,
         image: 'public/DC/famen1.png',
         data: { name: '电气按钮', remark: '我是电气按钮' },
@@ -152,6 +160,7 @@ export const icons = [
         name: 'image',
         width: 100,
         height: 100,
+        visible:true,
         image: 'public/DC/fengji1.png',
         data: { name: '风机', remark: '我是风机' },
         events: [
@@ -168,6 +177,7 @@ export const icons = [
       key: 'dianji',
       title: '图片',
       data: {
+        visible:true,
         name: 'image',
         width: 100,
         height: 100,
@@ -178,6 +188,7 @@ export const icons = [
       key: 'dici',
       title: '图片',
       data: {
+        visible:true,
         name: 'image',
         width: 100,
         height: 100,
@@ -189,6 +200,7 @@ export const icons = [
       title: '图片',
       data: {
         name: 'image',
+        visible:true,
         width: 100,
         height: 100,
         image: 'public/DC/061.png'
@@ -200,6 +212,7 @@ export const icons = [
       data: {
         name: 'image',
         width: 100,
+        visible:true,
         height: 100,
         image: 'public/DC/tuijiu1.png'
       },
@@ -210,6 +223,7 @@ export const icons = [
       data: {
         name: 'image',
         width: 100,
+        visible:true,
         height: 100,
         isBottom: true,
         image: 'public/DC/ZT.PNG'
@@ -223,6 +237,7 @@ export const icons = [
       data: {
         name: 'table',
         width: 100,
+        visible:true,
         height: 100,
         table: {
           colWidth: 150,
@@ -254,26 +269,29 @@ export const icons = [
       key: 'line-chart-line',
       title: 'line-chart-line',
       data: {
-        name: "lineChart",
-        x: 100,
-        y: 100,
+        name: 'echarts',
         width: 400,
-        height: 200,
-        chartsColor: [
-          '#1890ff',
-          '#2FC25B',
-          '#FACC14',
-          '#c23531',
-          '#2f4554',
-          '#61a0a8',
-          '#d48265'
-        ],
-        xAxisData: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        smooth: false,
-        data: [
-          [1820, 1932, 1901, 1934, 1990, 1830, 1920],
-          [1710, 1932, 1901, 1834, 1700, 1830, 1720],
-        ]
+        visible:true,
+        height: 300,
+        externElement: true,
+        disableAnchor: true,
+        echarts: {
+          option: {
+            xAxis: {
+              type: 'category',
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            },
+            yAxis: {
+              type: 'value',
+            },
+            series: [
+              {
+                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                type: 'line',
+              },
+            ],
+          },
+        },
       },
     },
     {

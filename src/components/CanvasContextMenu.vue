@@ -9,12 +9,9 @@
     <div class="line"></div>
     <div>
       <a @click="onCombine()">组合</a>
-      <div>
-        <a @click="onCombine(true)">包含</a>
-      </div>
     </div>
     <div>
-      <a @click="onUncombine()">取消组合/包含</a>
+      <a @click="onUncombine()">取消组合</a>
     </div>
     <div>
       <a @click="onLock()">解锁(锁定)</a>
@@ -56,11 +53,11 @@
       </a>
     </div>
     <div class="line"></div>
-    <div>
+    <!-- <div>
       <a @click="onCopyImage()" class="flex">
         <span class="full">复制节点图片地址</span>
       </a>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -74,6 +71,7 @@ export default {
   },
   mounted() {
     this.canvas = window.topology;
+    // let Emits = window.topology.store.emitter;
   },
   methods: {
     click() {
@@ -88,9 +86,13 @@ export default {
       window.topology.bottom(window.topology.store.active[0]);
     },
 
-    onCombine(stand) {},
+    onCombine(stand) {
+      window.topology.combine(window.topology.store.active);
+    },
 
-    onUncombine() {},
+    onUncombine() {
+       window.topology.uncombine(window.topology.store.active[0]);
+    },
 
     onLock() {
       // if (window.topology.store.active.length > 0) {
@@ -119,9 +121,13 @@ export default {
     },
 
     onDel() {
-      window.topology.delete(
-        window.topology.find(window.topology.store.active[0].id)
-      );
+      window.topology.store.active.forEach((v) => {
+        window.topology.delete( window.topology.find(v.id));
+      });
+      window.topology.render(Infinity);
+      // window.topology.delete(
+      //   window.topology.find(window.topology.store.active[0].id)
+      // );
     },
   },
 };

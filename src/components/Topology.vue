@@ -66,6 +66,7 @@ onMounted(() => {
   // 点击画布
 
   topology.on("click", (datas) => {
+    console.log(datas,555)
     topology.store.emitter.emit("clickPen", datas.pen);
     visible.value = true;
     close();

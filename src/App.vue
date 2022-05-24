@@ -148,7 +148,9 @@ ol[data-v-87d63fa8] {
   padding: 5px 10px;
   border-radius: 2px;
 }
+.monaco-list-row {
 
+}
 * {
   padding: 0;
   margin: 0;

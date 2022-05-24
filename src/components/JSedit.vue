@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="container"></div>
-    <el-button @click="close"> 保存</el-button>
+    <el-button @click="close" type="primary"> 保存</el-button>
   </div>
 </template>
 <script setup>
@@ -67,7 +67,7 @@ const initEditor = () => {
     // editor.value.setValue(window.topology.store.active[0].events.value);
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 #container {
   position: absolute;
   top: 30%;
@@ -75,5 +75,12 @@ const initEditor = () => {
   display: inline-block;
   width: 600px;
   height: 600px;
+
 }
+  button{
+    position: absolute;
+    z-index: 2222;
+    top: 250px;
+    right: 200px;
+  }
 </style>

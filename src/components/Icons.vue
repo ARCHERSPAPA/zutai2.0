@@ -3,6 +3,7 @@ import { nextTick, ref } from "vue";
 import { icons } from "../units/data";
 const onDragStart = (e, data) => {
   e.dataTransfer.setData("Topology", JSON.stringify(data));
+   window.topology.store.emitter.emit("clickPen",'');
 };
 nextTick(() => {
   // 此处只注册，未将数据放置到工具栏
