@@ -5,7 +5,7 @@ const isPenActive = ref(false);
 const isPencilActive = ref(false);
 const isMagnifierActive = ref(false);
 const isMinimapActive = ref(false);
-
+const isEditActive = ref(false);
 const onCreate = () => {
   window.topology.open();
 };
@@ -48,7 +48,6 @@ const onTogglePencil = () => {
   }
   if (isPencilActive.value === true) {
     isPencilActive.value = false;
-    // TODO: 新版本发布后，使用 stopPencil()
     window.topology.finishPencil();
   } else {
     isPencilActive.value = true;
@@ -139,12 +138,14 @@ const onSaveLocal = () => {
   });
   window.localStorage.setItem("mapsData", data);
 };
-const preMaps=()=>{
-window.topology.lock(1);
-}
-const EditMaps=()=>{
-window.topology.lock(0);
-}
+const preMaps = () => {
+  window.topology.lock(1);
+  isEditActive.value=false
+};
+const EditMaps = () => {
+  window.topology.lock(0);
+    isEditActive.value=true
+};
 </script>
 
 <template>
@@ -159,8 +160,20 @@ window.topology.lock(0);
       <button id="save" @click="onSave">保存</button>
       <button id="openLoacal" @click="onOpenLocal">打开最近编辑</button>
       <button id="saveLoacal" @click="onSaveLocal">保存到本地</button>
-      <button id="saveLoacal" @click="preMaps">预览</button>
-      <button id="saveLoacal" @click="EditMaps">编辑</button>
+      <button
+        id="saveLoacal"
+        @click="preMaps"
+        :class="{ active: !isEditActive }"
+      >
+        预览
+      </button>
+      <button
+        id="saveLoacal"
+        @click="EditMaps"
+        :class="{ active: isEditActive }"
+      >
+        编辑
+      </button>
       <button id="pen" :class="{ active: isPenActive }" @click="onTogglePen">
         钢笔
       </button>

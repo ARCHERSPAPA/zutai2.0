@@ -42,7 +42,7 @@ const onContextMenu = (event, v) => {
 let currentMap = ref("");
 onMounted(() => {
   const option = {
-    disableScale: true,
+    disableScale: false,
     rule: true,
     // grid:true,
     autoAnchor: false, //自动瞄点连线
@@ -62,11 +62,13 @@ onMounted(() => {
   topology.on("test", ({ pen }) => {
     alert("自定义事件执行成功", pen.name);
   });
-
+  topology.on("onValue", ({ pen }) => {
+    console.log(pen);
+  });
   // 点击画布
 
   topology.on("click", (datas) => {
-    console.log(datas,555)
+    console.log(datas, 555);
     topology.store.emitter.emit("clickPen", datas.pen);
     visible.value = true;
     close();

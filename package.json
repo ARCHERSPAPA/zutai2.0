@@ -4,14 +4,14 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --host",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": " vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "@topology/activity-diagram": "^1.0.1",
     "@topology/chart-diagram": "^1.0.9",
     "@topology/class-diagram": "^1.0.1",
-    "@topology/core": "^1.1.8",
+    "@topology/core": "^1.1.13",
     "@topology/flow-diagram": "^1.0.2",
     "@topology/sequence-diagram": "^1.0.1",
     "@topology/svg": "^1.0.1",

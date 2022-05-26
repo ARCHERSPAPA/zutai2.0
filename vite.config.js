@@ -5,9 +5,11 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [
     vue(),
+
   ],
-  server:{
-    hmr:true
+  base: './',
+  server: {
+    hmr: true
   },
   optimizeDeps: {
     include: [
@@ -16,6 +18,6 @@ export default defineConfig({
       `monaco-editor/esm/vs/language/html/html.worker`,
       `monaco-editor/esm/vs/language/typescript/ts.worker`,
       `monaco-editor/esm/vs/editor/editor.worker`
-    ], 
+    ],
   },
 })

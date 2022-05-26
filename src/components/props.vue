@@ -458,6 +458,22 @@
               </span>
             </template>
           </el-dialog>
+          <el-dialog v-model="data.bindVisible" title="绑定数据" width="15%">
+            <div class="attrItem">
+              <span class="attr">字段名称：</span>
+              <el-input
+                type="text"
+                v-model="data.formM.dataIds.dataId"
+                size="small"
+              ></el-input>
+            </div>
+            <template #footer>
+              <span class="dialog-footer">
+                <el-button @click="cancelDiag()">取消</el-button>
+                <el-button type="primary" @click="submitAttr()">确定</el-button>
+              </span>
+            </template>
+          </el-dialog>
         </p>
         <div class="item" v-for="(attr, index) of data.form" :key="index">
           <span class="label"> {{ attr.name }}：</span>
@@ -484,6 +500,7 @@
             style="width: 100px"
             @change="changeAttr(attr.key, attr.value)"
           ></el-input>
+          <span class="iconfont icon-bianji" @click="bind(index)"></span>
           <span class="iconfont icon-bianji" @click="editAttr(index)"></span>
         </div>
       </el-tab-pane>
@@ -572,10 +589,18 @@
           />
         </div>
       </el-tab-pane>
-      <el-tab-pane label="布局"> </el-tab-pane>
+      <el-tab-pane label="布局">
+        <div class="item" >
+          <span class="iconfont icon-juzhongduiqi lay" @click='layActive("middle")'></span>
+          <span class="iconfont icon-youduiqi lay" @click='layActive("right")'></span>
+          <span class="iconfont icon-zuoduiqi lay" @click='layActive("left")'></span>
+          <span class="iconfont icon-juxiaduiqi lay" @click='layActive("bottom")'></span>
+          <span class="iconfont icon-jushangduiqi lay" @click='layActive("top")'></span>
+        </div>
+      </el-tab-pane>
       <el-tab-pane label="结构">
         <div class="pens" v-for="(pen, index) of pensData" :key="index">
-          <span class="label">{{ pen.name }}</span>
+          <span class="label">{{ pen.name }} <span style="color:#999">({{pen.id}}) </span> </span>
           <p><span :class="getShow(pen)" @click="isShow(pen.id, 0)"></span></p>
         </div>
       </el-tab-pane>
@@ -642,9 +667,13 @@ let data = reactive({
     title: "json",
     type: "",
     value: "",
+    dataIds: {
+      dataId: "",
+    },
   },
   attrVisible: false,
   currentAttr: null,
+  bindVisible: false,
   EventOptions: [
     {
       label: "单击",
@@ -679,20 +708,21 @@ let data = reactive({
   ],
   draType: 0, //1pen 0画布 2线条
 });
+const layActive=(type)=>{
+  window.topology.alignNodes(type, window.topology.store.active);
+  window.topology.render()
+}
 const isShow = (id, type) => {
-  // debugger
-
   let pen = window.topology.find(id)[0];
   window.topology.setVisible(pen, !pen.visible);
   window.topology.render();
-
   if (type) {
     data.visible = window.topology.store.active[0].visible;
   } else {
     data.pens = window.topology.store.data.pens;
     pensData.value = window.topology.store.data.pens;
   }
-  vue.ctx.$forceUpdate();
+  // vue.ctx.$forceUpdate();
 };
 
 const getShow = (pen) => {
@@ -702,9 +732,34 @@ const getShow = (pen) => {
     return "iconfont icon-yincang";
   }
 };
+const bind = (i) => {
+  data.currentAttr = i;
+  data.formM = JSON.parse(JSON.stringify(data.form[i]));
+  window.topology.store.data.socketCbJs = `
+  // params: e - the message
+let data=JSON.parse(e);
+if(data){
+  data.forEach(item=>{
+    this.store.data.pens.forEach(v=>{
+      if(v.form && v.form[0].dataIds?.dataId==item.dataId){
+            console.log(v);
+         window.topology.setValue({id:v.id,text:item.value});
+      }
+    })
+  })
+}
+`;
+  window.topology.listenSocket();
+  data.bindVisible = true;
+};
 const handleClick = (e) => {};
+// const bindAttr=()=>{
+//   data.formM.code.push({ label: "", value: "" });
+//   dataIds
+// }
 const cancelDiag = () => {
   data.attrVisible = false;
+  data.bindVisible = false;
 };
 const addFormOption = () => {
   data.formM.option = data.formM.option ? data.formM.option : [];
@@ -730,6 +785,7 @@ const submitAttr = () => {
     data.form.push(data.formM);
   }
   data.attrVisible = false;
+  data.bindVisible = false;
   data.currentAttr = null;
   window.topology.setValue({ id: data.id, form: data.form });
   // reset();
@@ -752,6 +808,7 @@ const reset = () => {
     placeholder: "",
     title: "json",
     type: "",
+    dataIds: { dataId: "" },
   };
 };
 const openJsEdit = () => {
@@ -760,6 +817,7 @@ const openJsEdit = () => {
 
 onMounted(() => {
   let Emits = window.topology.store.emitter;
+
   Emits.on("JSdata", (v) => {
     if ([5].includes(data.events[0].action)) {
       data.events[0].value = v;
@@ -789,7 +847,7 @@ onMounted(() => {
     data.pens = window.topology.store.data.pens;
     pensData.value = window.topology.store.data.pens;
     console.log(pensData, 2222);
-    vue.ctx.$forceUpdate();
+    // vue.ctx.$forceUpdate();
     if (maps && maps.name === "line") {
       data.draType = 2;
       data.currentId = maps.id;
@@ -821,7 +879,7 @@ const renderPen = (pen) => {
   data.animateType = pen.animateType;
   data.autoPlay = pen.autoPla ? pen.autoPlay : true;
   data.showDuration = pen.showDuration;
-  data.animateCycle=pen.animateCycle
+  data.animateCycle = pen.animateCycle;
   data.name = pen.name;
   data.nextAnimate = pen.nextAnimate;
   data.lineHeight = pen.lineHeight;
@@ -980,6 +1038,12 @@ const changeEvent = (eventName) => {
     // font-size: ;
     padding-top: 5px;
     cursor: pointer;
+  }
+  .lay{
+    padding: 10px;
+  }
+  .lay:hover{
+    color:rgb(11, 167, 229)
   }
   .icon-xianshi {
     color: rgba(8, 137, 243, 0.5);
