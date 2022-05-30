@@ -1,11 +1,13 @@
-<script setup >
+<script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { ElMessage } from "element-plus";
+import { useStore } from "vuex"; // 引入useStore 方法
+const store = useStore();
 const isPenActive = ref(false);
 const isPencilActive = ref(false);
 const isMagnifierActive = ref(false);
 const isMinimapActive = ref(false);
-const isEditActive = ref(false);
+const isEditActive = ref(true);
 const onCreate = () => {
   window.topology.open();
 };
@@ -140,12 +142,18 @@ const onSaveLocal = () => {
 };
 const preMaps = () => {
   window.topology.lock(1);
-  isEditActive.value=false
+  isEditActive.value = false;
 };
 const EditMaps = () => {
   window.topology.lock(0);
-    isEditActive.value=true
+  isEditActive.value = true;
 };
+const fitView = () => {
+  window.topology.fitView(true);
+};
+const preMapsAll=()=>{
+  store.dispatch('asyncUpdateIsPre',true)
+}
 </script>
 
 <template>
@@ -158,30 +166,20 @@ const EditMaps = () => {
         <input id="open-input" type="file" @change="onOpen" />
       </button>
       <button id="save" @click="onSave">保存</button>
+      <button id="save" @click="fitView">自适应屏幕</button>
       <button id="openLoacal" @click="onOpenLocal">打开最近编辑</button>
       <button id="saveLoacal" @click="onSaveLocal">保存到本地</button>
-      <button
-        id="saveLoacal"
-        @click="preMaps"
-        :class="{ active: !isEditActive }"
-      >
+      <button id="saveLoacal" @click="preMaps" :class="{ active: !isEditActive }">
         预览
       </button>
-      <button
-        id="saveLoacal"
-        @click="EditMaps"
-        :class="{ active: isEditActive }"
-      >
+      <button id="saveLoacal" @click="preMapsAll" >
+        预览(整体)
+      </button>
+      <button id="saveLoacal" @click="EditMaps" :class="{ active: isEditActive }">
         编辑
       </button>
-      <button id="pen" :class="{ active: isPenActive }" @click="onTogglePen">
-        钢笔
-      </button>
-      <button
-        id="pencil"
-        :class="{ active: isPencilActive }"
-        @click="onTogglePencil"
-      >
+      <button id="pen" :class="{ active: isPenActive }" @click="onTogglePen">钢笔</button>
+      <button id="pencil" :class="{ active: isPencilActive }" @click="onTogglePencil">
         铅笔
       </button>
       <button
@@ -191,11 +189,7 @@ const EditMaps = () => {
       >
         放大镜
       </button>
-      <button
-        id="minimap"
-        :class="{ active: isMinimapActive }"
-        @click="onToggleMinimap"
-      >
+      <button id="minimap" :class="{ active: isMinimapActive }" @click="onToggleMinimap">
         缩略图
       </button>
     </div>

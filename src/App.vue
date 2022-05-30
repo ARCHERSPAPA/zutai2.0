@@ -1,14 +1,14 @@
 <template>
   <div style="display: flex; flex-direction: column">
-    <Header />
+    <Header v-show="!store.state.isPreview" />
     <div class="mainContrl">
-      <Icons />
+      <Icons v-show="!store.state.isPreview" />
       <Topology />
-      <PropMenu />
+      <PropMenu v-show="!store.state.isPreview" />
     </div>
   </div>
 </template>
-<script setup >
+<script setup>
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 
@@ -16,9 +16,10 @@ import Header from "./components/header.vue";
 import Icons from "./components/Icons.vue";
 import Topology from "./components/Topology.vue";
 import PropMenu from "./components/props.vue";
+import { useStore } from "vuex"; // 引入useStore 方法
+const store = useStore();
+console.log(store,'wossssss')
 </script>
-
-
 
 <style>
 .zs-color-picker[data-v-87d63fa8] {
@@ -149,7 +150,6 @@ ol[data-v-87d63fa8] {
   border-radius: 2px;
 }
 .monaco-list-row {
-
 }
 * {
   padding: 0;

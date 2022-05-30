@@ -1,11 +1,7 @@
 <!-- 属性栏 -->
 <template>
   <div class="props">
-    <el-tabs
-      @tab-click="handleClick"
-      v-if="data.draType != 0"
-      style="height: 100%"
-    >
+    <el-tabs @tab-click="handleClick" v-if="data.draType != 0" style="height: 100%">
       <el-tab-pane label="外观">
         <div v-if="data.draType === 1">
           <p class="title">位置与大小</p>
@@ -70,11 +66,7 @@
           </div>
           <div class="item">
             <span class="label"> 颜色：</span>
-            <color
-              v-model="data.color"
-              :attr="'color'"
-              class="colorPicker"
-            ></color>
+            <color v-model="data.color" :attr="'color'" class="colorPicker"></color>
             <el-input
               v-model="data.color"
               placeholder="请输入文字颜色"
@@ -147,9 +139,7 @@
       <el-tab-pane label="事件">
         <p class="title">事件属性</p>
         <p style="text-align: center; padding: 8px">
-          <el-button @click="addEvent()" v-if="!data.events"
-            >添加事件</el-button
-          >
+          <el-button @click="addEvent()" v-if="!data.events">添加事件</el-button>
         </p>
 
         <div class="item" v-if="data.events">
@@ -190,10 +180,7 @@
             />
           </el-select>
         </div>
-        <div
-          class="item"
-          v-if="data.events && ![5, 6].includes(data.events[0].action)"
-        >
+        <div class="item" v-if="data.events && ![5, 6].includes(data.events[0].action)">
           <span class="label"> 值：</span>
           <el-input
             v-model="data.events[0].value"
@@ -203,10 +190,7 @@
             @change="changeEvent('value')"
           />
         </div>
-        <div
-          class="item"
-          v-if="data.events && [5, 6].includes(data.events[0].action)"
-        >
+        <div class="item" v-if="data.events && [5, 6].includes(data.events[0].action)">
           <span class="label">
             <el-button @click="openJsEdit()">自定义JS</el-button></span
           >
@@ -287,7 +271,7 @@
               size="small"
             >
               <el-option label="上下跳动" value="upDown" />
-              <el-option label="警告" value="warning" />
+              <el-option label="旋转" value="rotate" />
             </el-select>
           </div>
           <div class="item">
@@ -386,19 +370,11 @@
           <el-dialog v-model="data.attrVisible" title="自定义属性" width="15%">
             <div class="attrItem">
               <span class="attr">显示名称：</span>
-              <el-input
-                type="text"
-                v-model="data.formM.name"
-                size="small"
-              ></el-input>
+              <el-input type="text" v-model="data.formM.name" size="small"></el-input>
             </div>
             <div class="attrItem">
               <span class="attr">属性名：</span>
-              <el-input
-                type="text"
-                v-model="data.formM.key"
-                size="small"
-              ></el-input>
+              <el-input type="text" v-model="data.formM.key" size="small"></el-input>
             </div>
             <div class="attrItem">
               <span class="attr">类型：</span>
@@ -430,25 +406,15 @@
             >
               <div class="attrItem">
                 <span class="attr">名称：</span>
-                <el-input
-                  type="text"
-                  v-model="option.label"
-                  size="small"
-                ></el-input>
+                <el-input type="text" v-model="option.label" size="small"></el-input>
               </div>
               <div class="attrItem">
                 <span class="attr">值：</span>
-                <el-input
-                  type="text"
-                  v-model="option.value"
-                  size="small"
-                ></el-input>
+                <el-input type="text" v-model="option.value" size="small"></el-input>
               </div>
             </div>
             <div v-if="data.formM.type == 'select'" style="margin-top: 8px">
-              <el-button @click="addFormOption()" type="primary"
-                >新增选项</el-button
-              >
+              <el-button @click="addFormOption()" type="primary">新增选项</el-button>
               <el-button @click="delFormOption()">删除选项</el-button>
             </div>
             <template #footer>
@@ -590,17 +556,23 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="布局">
-        <div class="item" >
-          <span class="iconfont icon-juzhongduiqi lay" @click='layActive("middle")'></span>
-          <span class="iconfont icon-youduiqi lay" @click='layActive("right")'></span>
-          <span class="iconfont icon-zuoduiqi lay" @click='layActive("left")'></span>
-          <span class="iconfont icon-juxiaduiqi lay" @click='layActive("bottom")'></span>
-          <span class="iconfont icon-jushangduiqi lay" @click='layActive("top")'></span>
+        <div class="item" style="flex-wrap: wrap">
+          <span
+            class="iconfont icon-juzhongduiqi lay"
+            @click="layActive('middle')"
+          ></span>
+          <span class="iconfont icon-youduiqi lay" @click="layActive('right')"></span>
+          <span class="iconfont icon-zuoduiqi lay" @click="layActive('left')"></span>
+          <span class="iconfont icon-juxiaduiqi lay" @click="layActive('bottom')"></span>
+          <span class="iconfont icon-jushangduiqi lay" @click="layActive('top')"></span>
+          <span class="iconfont icon-hengxiang lay" @click="layActive('center')"></span>
         </div>
       </el-tab-pane>
       <el-tab-pane label="结构">
         <div class="pens" v-for="(pen, index) of pensData" :key="index">
-          <span class="label">{{ pen.name }} <span style="color:#999">({{pen.id}}) </span> </span>
+          <span class="label"
+            >{{ pen.name }} <span style="color: #999">({{ pen.id }}) </span>
+          </span>
           <p><span :class="getShow(pen)" @click="isShow(pen.id, 0)"></span></p>
         </div>
       </el-tab-pane>
@@ -610,9 +582,7 @@
   </div>
 </template>
 
-
-
-<script setup >
+<script setup>
 import {
   reactive,
   toRefs,
@@ -655,6 +625,7 @@ let data = reactive({
   showEdit: false,
   data: [],
   pens: [],
+  httpUrl: "",
   newTag: "",
   currentFormValue: "",
   formM: {
@@ -708,10 +679,10 @@ let data = reactive({
   ],
   draType: 0, //1pen 0画布 2线条
 });
-const layActive=(type)=>{
+const layActive = (type) => {
   window.topology.alignNodes(type, window.topology.store.active);
-  window.topology.render()
-}
+  window.topology.render();
+};
 const isShow = (id, type) => {
   let pen = window.topology.find(id)[0];
   window.topology.setVisible(pen, !pen.visible);
@@ -735,21 +706,26 @@ const getShow = (pen) => {
 const bind = (i) => {
   data.currentAttr = i;
   data.formM = JSON.parse(JSON.stringify(data.form[i]));
-  window.topology.store.data.socketCbJs = `
-  // params: e - the message
-let data=JSON.parse(e);
-if(data){
-  data.forEach(item=>{
-    this.store.data.pens.forEach(v=>{
-      if(v.form && v.form[0].dataIds?.dataId==item.dataId){
-            console.log(v);
-         window.topology.setValue({id:v.id,text:item.value});
-      }
-    })
-  })
-}
-`;
-  window.topology.listenSocket();
+  window.topology.store.data.socketCbJs = undefined;
+  //   `
+  //   // params: e - the message
+  // let data=JSON.parse(e);
+  //            console.log(data);
+  // if(data && data.length>1){
+  //   data.forEach(item=>{
+  //     this.store.data.pens.forEach(v=>{
+  //       if(v.form && v.form[${data.currentAttr}].dataIds?.dataId==item.dataId){
+
+  //             let param={id:v.id}
+  //             param[v.form[${data.currentAttr}].key]=item.value
+
+  //          window.topology.setValue({id:v.id,text:item.value});
+  //       }
+  //     })
+  //   })
+  // }
+  // `;
+  // window.topology.listenSocket();
   data.bindVisible = true;
 };
 const handleClick = (e) => {};
@@ -823,7 +799,7 @@ onMounted(() => {
       data.events[0].value = v;
       data.showEdit = false;
     }
-    window.topology.render();
+    window.topology.render(Infinity);
   });
   Emits.on("changeColor", (v) => {
     if (v.type == 1) {
@@ -846,7 +822,7 @@ onMounted(() => {
   Emits.on("clickPen", (maps) => {
     data.pens = window.topology.store.data.pens;
     pensData.value = window.topology.store.data.pens;
-    console.log(pensData, 2222);
+    console.log(maps, 2222);
     // vue.ctx.$forceUpdate();
     if (maps && maps.name === "line") {
       data.draType = 2;
@@ -875,6 +851,7 @@ const renderPen = (pen) => {
   data.fontSize = pen.fontSize;
   data.y = pen.y;
   data.events = pen.events;
+  data.currentAttr = pen.form?.length ? pen.form?.length : 0;
   data.color = pen.color;
   data.animateType = pen.animateType;
   data.autoPlay = pen.autoPla ? pen.autoPlay : true;
@@ -885,8 +862,7 @@ const renderPen = (pen) => {
   data.lineHeight = pen.lineHeight;
   data.visible = pen.visible ? pen.visible : false;
   data.fontFamily = pen.fontFamily;
-  (data.form = pen.form ? pen.form : []),
-    (data.tags = pen.tags ? pen.tags : []);
+  (data.form = pen.form ? pen.form : []), (data.tags = pen.tags ? pen.tags : []);
 };
 const renderLine = (line) => {
   window.topology.addPen(line);
@@ -921,7 +897,7 @@ const addTag = () => {
 };
 //链接http
 const connectHttp = () => {
-  window.topology.store.data.http = data.httpUrl;
+  window.topology.store.data.http = data.config.http;
   window.topology.store.data.httpTimeInterval = 4000; // 轮询间隔时间, 默认 1000
   window.topology.connectHttp();
 };
@@ -955,6 +931,23 @@ const start = (type) => {
             },
             { y: 0, duration: 100 },
             { y: -10, duration: 200 },
+          ],
+        });
+        window.topology.render();
+        break;
+      case "rotate":
+        window.topology.setValue({
+          id: data.id,
+          frames: [
+            {
+              rotate: 0,
+              duration: 100,
+            },
+            {
+              rotate: 360,
+              duration:100,
+            },
+
           ],
         });
         window.topology.render();
@@ -1026,7 +1019,7 @@ const changeEvent = (eventName) => {
   window.topology.render();
 };
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .props {
   float: left;
   position: relative;
@@ -1039,11 +1032,11 @@ const changeEvent = (eventName) => {
     padding-top: 5px;
     cursor: pointer;
   }
-  .lay{
+  .lay {
     padding: 10px;
   }
-  .lay:hover{
-    color:rgb(11, 167, 229)
+  .lay:hover {
+    color: rgb(11, 167, 229);
   }
   .icon-xianshi {
     color: rgba(8, 137, 243, 0.5);
